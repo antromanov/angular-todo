@@ -1,0 +1,10 @@
+<div class="add-container">
+  <input
+    type="text"
+    placeholder="Type here..."
+    class="input-field"
+    [value]="value"
+    (keyup)="handleInput($event)"
+  />
+  <button (click)="onAdd(value)">Add</button>
+</div>
