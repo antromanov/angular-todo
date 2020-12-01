@@ -11,8 +11,6 @@ export class AddTodoComponent implements OnInit {
   constructor(private todoService: TodoService) { }
 
   ngOnInit(): void {
-    console.log('sadccc', this.value);
-
   }
 
   onAdd(title: string) {
