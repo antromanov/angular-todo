@@ -21,10 +21,10 @@ export class TodoService {
   todos: Todo[] = [];
   constructor(private http: HttpClient) {}
 
-  private todosUrl = 'http://exceed-todo-list.herokuapp.com/api/v1/todos';
+  private todosUrl = 'http://exceed-todo-list.herokuapp.com/api/v1';
 
   getTodos(): Observable<Todo[]> {
-    return this.http.get<Todo[]>(this.todosUrl, this.httpOptions).pipe(
+    return this.http.get<Todo[]>(`${this.todosUrl}/todos`, this.httpOptions).pipe(
       tap((_) => console.log('fetched Todos')),
       catchError(this.handleError<Todo[]>([]))
     );
@@ -32,16 +32,20 @@ export class TodoService {
 
   addTodo(title): Observable<Todo> {
     return this.http
-      .post<Todo>(this.todosUrl, { title }, this.httpOptions)
+      .post<Todo>(`${this.todosUrl}/todos`, { title }, this.httpOptions)
       .pipe(
         tap((_) => console.log('Added Todo')),
         catchError(this.handleError<Todo>())
       );
   }
 
-  deleteTodo(id) {
-    this.todos = this.todos.filter((todo, todoId) => todoId !== id);
-    return this.todos;
+  deleteTodo(id: number): Observable<Todo> {
+    return this.http
+      .delete<Todo>(`${this.todosUrl}/todos/${id}`, this.httpOptions)
+      .pipe(
+        tap((_) => console.log('Deleted Todo')),
+        catchError(this.handleError<Todo>())
+      )
   }
 
   private handleError<T>(result?: T) {
