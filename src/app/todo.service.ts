@@ -1,22 +1,54 @@
 import { Injectable } from '@angular/core';
-import { todos } from './todos';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+
+import { Todo } from './todo';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TodoService {
-todos = []
-  constructor() { }
+  apiKey = '0511a71f-c4b2-4aa1-9191-299d8223dc8f';
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      apiKey: this.apiKey,
+      'Access-Control-Allow-Origin': '*',
+    }),
+  };
+  todos: Todo[] = [];
+  constructor(private http: HttpClient) {}
 
-  addTodo(title) {
-    this.todos.push(title)
+  private todosUrl = 'http://exceed-todo-list.herokuapp.com/api/v1/todos';
+
+  getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(this.todosUrl, this.httpOptions).pipe(
+      tap((_) => console.log('fetched Todos')),
+      catchError(this.handleError<Todo[]>([]))
+    );
   }
 
-  getTodos() {
-    return this.todos = todos
+  addTodo(title): Observable<Todo> {
+    return this.http
+      .post<Todo>(this.todosUrl, { title }, this.httpOptions)
+      .pipe(
+        tap((_) => console.log('Added Todo')),
+        catchError(this.handleError<Todo>())
+      );
   }
 
   deleteTodo(id) {
-    this.todos = this.todos.filter((todo, todoId) => todoId !== id)
+    this.todos = this.todos.filter((todo, todoId) => todoId !== id);
+    return this.todos;
+  }
+
+  private handleError<T>(result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(error);
+
+      return of(result as T);
+    };
   }
 }

@@ -1,4 +1,4 @@
-<app-add-todo></app-add-todo>
+<app-add-todo (add)="addTodo($event)"></app-add-todo>
 
 <div *ngFor="let todo of todos; index as todoId">
     <app-todo [todo]="todo" [todoId]="todoId" (delete)="deleteOne($event)"></app-todo>

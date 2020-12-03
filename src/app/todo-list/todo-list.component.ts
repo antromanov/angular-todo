@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Todo } from '../todo';
 import { TodoService } from '../todo.service';
 
 @Component({
@@ -8,16 +9,24 @@ import { TodoService } from '../todo.service';
 })
 export class TodoListComponent implements OnInit {
   @Input() delete
-  todos: string[]
+  @Input() add
+  todos: Todo[]
   constructor(public todoService: TodoService) { }
 
   ngOnInit(): void {
-    this.todos = this.todoService.getTodos()
+    this.getTodos()
+  }
+
+  getTodos(): void {
+    this.todoService.getTodos().subscribe(todos => this.todos = todos)
+  }
+
+  addTodo(title) {
+    this.todoService.addTodo(title).subscribe(() =>  this.todos.push({title, isDone: false}))
+
   }
 
   deleteOne(id) {
-    this.todoService.deleteTodo(id)
-    this.todos = this.todos.filter((todo, todoId) => todoId !== id)
   }
 
 

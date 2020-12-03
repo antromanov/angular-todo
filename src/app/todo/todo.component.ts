@@ -14,7 +14,10 @@ export class TodoComponent implements OnInit {
   constructor(public todoService: TodoService) { }
 
   ngOnInit(): void {
-    this.todoService.getTodos()
+  }
+
+  onSwitchStatus(todo) {
+    this.todo.isDone = !this.todo.isDone
   }
 
   onDelete(id) {

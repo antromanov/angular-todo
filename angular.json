@@ -70,7 +70,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "ng-todo:build:production"
+              "browserTarget": "ng-todo:build:production",
+              "proxyConfig": "src/proxy.conf.json"
             }
           }
         },
